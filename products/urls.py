@@ -4,4 +4,5 @@ import products.views
 
 urlpatterns = [
 	path('', products.views.home, name="products_home"),
+	path('create/',products.views.create, name="products_create")
 ]

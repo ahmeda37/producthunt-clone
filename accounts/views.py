@@ -18,7 +18,7 @@ def signup(request):
 			except User.DoesNotExist:
 				user = User.objects.create_user(username=request.POST['username'], password=request.POST['password'])
 				auth.login(request,user)
-				return redirect('products_home')
+				return redirect('producthunt_home')
 		else:
 			return render(request, 'accounts/signup.html', {'error':'Passwords Must Match'})
 	else:
@@ -29,7 +29,7 @@ def login(request):
 		user = auth.authenticate(username=request.POST['username'],password=request.POST['password'])
 		if user is not None:
 			auth.login(request, user)
-			return redirect('products_home')
+			return redirect('producthunt_home')
 		else:
 			return render(request, 'accounts/login.html',{'error':'Username or Password is incorrect.'})
 	else:
@@ -37,4 +37,4 @@ def login(request):
 def logout(request):
 	if request.method == 'POST':
 		auth.logout(request)
-		return redirect('products_home')
+		return redirect('producthunt_home')
