@@ -11,6 +11,8 @@ class Product(models.Model):
 	icon = models.ImageField(upload_to='images/')
 	body = models.TextField()
 	hunter = models.ForeignKey(User, on_delete=models.CASCADE)
+	upvote = models.ManyToManyField(User,default=None,related_name="%(app_label)s_%(class)s_related",
+        related_query_name="%(app_label)s_%(class)ss")
 
 	def __str__(self):
 		return self.title

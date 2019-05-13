@@ -1,7 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from products.models import Product
 from django.utils import timezone
+from django.contrib.auth.models import User
+from django.contrib import messages
+
 # Create your views here.
 
 def home(request):
@@ -22,6 +25,22 @@ def create(request):
 		product.pub_date = timezone.datetime.now()
 		product.hunter = request.user
 		product.save()
-		return redirect('products_home')
+		return redirect('/products/' + str(product.id))
 	else:
 		return render(request, 'products/create.html')
+
+def detail(request, product_id):
+	product = get_object_or_404(Product, pk=product_id)
+	return render(request, 'products/detail.html',{'product':product})
+
+@login_required(login_url='/accounts/signup')
+def upvote(request, product_id):
+	if request.method == 'POST':
+		product = get_object_or_404(Product, pk=product_id)
+		if product.upvote.filter(pk=request.user.id).exists():
+			messages.add_message(request, messages.ERROR, 'You already Voted!')
+		else:
+			product.upvote.add(request.user)
+			product.votes_total +=1
+		product.save()
+	return redirect('/products/'+str(product.id))

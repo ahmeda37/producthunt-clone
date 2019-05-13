@@ -1,5 +1,33 @@
 {% extends 'producthunt/base.html'%}
 
 {% block content %}
-HOMEPAGE!
+
+
+{% for product in products.all %}
+<br/>
+<div class="container">
+
+	<div class="row">
+		<div class="col-1">
+			<img src="{{product.icon.url}}" class="img-fluid">
+		</div>
+		<div class="col-6">
+			<h2>{{product.title}}</h2>
+			<p>{{product.summary}}</p>
+		</div>
+		<div class="col-4">
+			<a href="javascript:{document.getElementById('upvote{{product.id}}').submit()}">
+				<button class="btn btn-primary btn-lg btn-block"><i class="fas fa-arrow-up"></i> Upvote {{product.votes_total}}</button>
+			</a>
+		</div>
+
+	</div>
+</div>
+
+<form id="upvote{{product.id}}" method="POST" action="{% url 'products_upvote' product.id %}">
+	{% csrf_token %}
+	<input type="hidden">
+</form>
+
+{% endfor %}
 {% endblock %}
